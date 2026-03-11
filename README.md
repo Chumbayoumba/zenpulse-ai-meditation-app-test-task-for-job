@@ -203,42 +203,39 @@ How I controlled it in this prototype:
 
 ## Video materials
 
-GitHub does not support a true inline MP4 player inside `README.md`.  
-The best supported experience is a large preview card in the README that opens the hosted MP4 in GitHub's built-in file viewer when clicked.
-
 ### 1. AI prompting and redesign iteration (desktop)
-
-[![Prompting and redesign desktop video preview](./assets/demo/video-previews/prompting-and-redesign-desktop.png)](./assets/demo/videos/prompting-and-redesign-desktop.mp4)
 
 This video documents the prompt-engineering part of the assignment:
 
-- showing the desktop workflow while prompting GitHub Copilot
+- desktop workflow while prompting GitHub Copilot
 - describing the desired premium meditation style and UI direction
-- asking the AI to fix a real layout/readability issue on the meditation cards
-- demonstrating how AI guidance was corrected instead of accepted blindly
+- asking the AI to fix a real readability issue on the meditation cards
+- demonstrating how AI guidance was corrected, not accepted blindly
+
+https://github.com/user-attachments/assets/12c30598-9176-4abd-8088-ce726a0b60c5
 
 ### 2. Functional device walkthrough — initial flow
 
-[![Initial device flow video preview](./assets/demo/video-previews/device-demo-initial-flow.png)](./assets/demo/videos/device-demo-initial-flow.mp4)
+This video covers the first complete app pass on a real device:
 
-This video focuses on the first complete app pass:
-
-- opening the app and showing the `Paywall`
+- opening the app on the `Paywall`
 - using the limited-access path
-- tapping premium cards to confirm redirect-to-paywall behavior
-- activating the simulated trial and unlocking premium access
-- validating the core subscription logic required by the task
+- tapping locked premium cards — confirm they redirect back to paywall
+- activating the simulated free trial and unlocking premium access
+- validating the core `isSubscribed` logic required by the task
+
+https://github.com/user-attachments/assets/6f1304ec-1e9a-4f27-9ad3-1222235e3461
 
 ### 3. Functional device walkthrough — post-redesign premium state
 
-[![Post redesign premium video preview](./assets/demo/video-previews/device-demo-post-redesign-premium.png)](./assets/demo/videos/device-demo-post-redesign-premium.mp4)
+This video shows the app after the readability and visual polish pass:
 
-This video shows the app after the readability redesign:
+- revisiting meditation cards after the contrast redesign
+- checking text legibility across all card types
+- app in already-unlocked premium state — all content accessible
+- final visual quality proof pass
 
-- revisiting the meditation cards after the visual polish pass
-- checking the upgraded readability and premium styling
-- showing the app in an already-unlocked premium state
-- providing an additional proof pass for the final visual quality
+https://github.com/user-attachments/assets/9ac3480a-95bc-441e-bb1a-c6edafa2cb36
 
 ## Final submission checklist
 

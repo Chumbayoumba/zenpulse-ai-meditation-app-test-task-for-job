@@ -203,42 +203,39 @@ EXPO_PUBLIC_AI_ENDPOINT=http://<LAN_IP_ТВОЕГО_ПК>:8788/api/affirmation
 
 ## Видеоматериалы
 
-GitHub не поддерживает настоящий inline MP4-player прямо внутри `README.md`.  
-Лучший поддерживаемый вариант — большая preview-обложка в README, по клику на которую откроется MP4 через встроенный GitHub file viewer.
-
 ### 1. Prompting и redesign-итерация (desktop)
-
-[![Preview prompting and redesign desktop video](./assets/demo/video-previews/prompting-and-redesign-desktop.png)](./assets/demo/videos/prompting-and-redesign-desktop.mp4)
 
 Это видео закрывает prompt-engineering часть задания:
 
-- показан desktop workflow при работе с GitHub Copilot
-- зафиксировано, как формулировалось visual direction для premium meditation UI
-- показано, как AI просили исправить реальную проблему верстки и читаемости карточек
-- видно, что результат AI не принимался вслепую, а доводился через корректирующий prompt
+- desktop workflow при работе с GitHub Copilot
+- как формулировалось visual direction для premium meditation UI
+- как AI просили исправить реальную проблему читаемости карточек
+- как результат AI доводился через корректирующий промпт, а не принимался вслепую
+
+https://github.com/user-attachments/assets/12c30598-9176-4abd-8088-ce726a0b60c5
 
 ### 2. Device walkthrough — первый полный проход
 
-[![Preview initial device flow video](./assets/demo/video-previews/device-demo-initial-flow.png)](./assets/demo/videos/device-demo-initial-flow.mp4)
-
-Это видео показывает первый полный продуктовый сценарий:
+Это видео показывает первый полный продуктовый сценарий на реальном устройстве:
 
 - открытие приложения и показ `Paywall`
 - переход через limited-access path
-- нажатие на premium cards и возврат на paywall
-- активацию simulated trial и разблокировку premium-доступа
-- проверку основной subscription-логики, которая требовалась по заданию
+- нажатие на premium-карточки — подтверждение возврата на paywall
+- активация simulated trial и разблокировка premium-доступа
+- проверка логики `isSubscribed`, которая требовалась по заданию
+
+https://github.com/user-attachments/assets/6f1304ec-1e9a-4f27-9ad3-1222235e3461
 
 ### 3. Device walkthrough — состояние после redesign
 
-[![Preview post redesign premium video](./assets/demo/video-previews/device-demo-post-redesign-premium.png)](./assets/demo/videos/device-demo-post-redesign-premium.mp4)
-
 Это видео показывает приложение после visual polish pass:
 
-- повторная проверка meditation cards после редизайна читаемости
-- демонстрация улучшенной visual clarity и premium-feel
-- показ состояния, где premium уже активирован
-- дополнительная финальная проверка качества интерфейса
+- повторная проверка meditation cards после редизайна контрастности
+- читаемость текста на всех типах карточек
+- состояние с уже активированным premium — весь контент доступен
+- финальная проверка качества интерфейса
+
+https://github.com/user-attachments/assets/9ac3480a-95bc-441e-bb1a-c6edafa2cb36
 
 ## Финальный submission checklist
 
