@@ -1,0 +1,170 @@
+# ZenPulse: AI Meditation App
+
+Luxury wellness prototype built for the mobile test task with `React Native + Expo + TypeScript`.
+
+## What is included
+
+- Premium `Paywall` with monthly / yearly plans and a highlighted best-value option
+- `Meditations` home screen with locked premium cards and paywall redirect logic
+- Dedicated `Session` screen for unlocked rituals with a tactile cue-by-cue prototype player
+- `AI Mood of the day` flow with 3 moods, live text generation, error states, and local persistence
+- `SafeAreaView` on top/bottom, compact-screen adjustments, and touch targets sized for mobile use
+- AsyncStorage persistence for subscription state, selected plan, and the latest affirmation
+
+## Stack
+
+- Expo SDK 55
+- Expo Router
+- React Native Safe Area Context
+- Expo Linear Gradient
+- Expo Haptics
+- AsyncStorage
+
+## Run locally
+
+```bash
+npm install
+```
+
+Recommended terminal #1:
+
+```bash
+npm run ai-proxy
+```
+
+Recommended terminal #2:
+
+```bash
+npx expo start
+```
+
+Optional browser preview:
+
+```bash
+npx expo start --web --port 19006
+```
+
+Validation commands:
+
+```bash
+npm run typecheck
+npm run doctor
+```
+
+## AI setup
+
+The app supports two live-generation paths:
+
+1. `Recommended for demos:` run `npm run ai-proxy`
+2. `Optional:` point `EXPO_PUBLIC_AI_ENDPOINT` to your own server endpoint
+
+### How dev-mode AI routing works
+
+- If `EXPO_PUBLIC_AI_ENDPOINT` is set, the app uses it directly
+- If Expo is running on `localhost` or a LAN IP and the local proxy is running, the app auto-tries `http://<expo-host>:8788/api/affirmation`
+- Otherwise the app falls back to the public Pollinations demo endpoint
+
+Create `.env.local` only if you want to force a custom endpoint:
+
+```bash
+EXPO_PUBLIC_AI_ENDPOINT=http://192.168.X.X:8788/api/affirmation
+```
+
+## How to test on a real phone
+
+### Same Wi-Fi path (best for the recording)
+
+1. Start `npm run ai-proxy`
+2. Start `npx expo start`
+3. Open Expo Go on the phone
+4. Scan the QR code from the Expo terminal
+5. The app should auto-detect the Expo host and use the local AI proxy
+
+### If Expo discovery is flaky
+
+You can use:
+
+```bash
+npx expo start --tunnel
+```
+
+Important note: tunnel mode helps deliver the bundle, but the AI request still needs a reachable endpoint. For a deterministic phone demo in tunnel mode, set:
+
+```bash
+EXPO_PUBLIC_AI_ENDPOINT=http://<YOUR_PC_LAN_IP>:8788/api/affirmation
+```
+
+Then restart Expo so the env value is embedded again.
+
+## Suggested phone test script
+
+1. Open the app and land on the `Paywall`
+2. Tap `Continue with limited access`
+3. On the library screen, tap a locked premium card and confirm it routes back to the paywall
+4. Tap `Try premium free for 7 days`
+5. Confirm premium cards unlock
+6. Open an unlocked ritual and advance through the cue flow
+7. Return to the library
+8. Open `AI Mood of the day`
+9. Pick a mood and generate a live affirmation
+10. Reload the app and confirm the unlocked state + latest affirmation persist
+
+## How AI handled mobile specifics
+
+- Navigation is route-based with Expo Router: `paywall -> meditations -> session`, plus a modal-style `affirmation` flow
+- All primary screens use `SafeAreaView` with top/bottom edges enabled
+- The UI switches into a compact mode below `360px` width using `useWindowDimensions`
+- Locked content is enforced both on the library cards and on direct session routes
+- Long-form content stays scroll-first instead of relying on fixed-height hero layouts
+
+## Control question
+
+### "What mobile layout problems does AI handle worst, and how did you control it so the app did not break on iPhone SE vs Pro Max?"
+
+AI usually struggles most with:
+
+- vertical density on small phones when marketing copy, pricing cards, and CTA buttons compete for the same viewport
+- Safe Area collisions near the notch / home indicator
+- oversized headings that look elegant on Pro Max but become greedy on iPhone SE
+- touch-target sizing when the layout gets compressed
+- route logic details such as "locked card must still be tappable, but must redirect to paywall instead of opening premium content"
+
+How I controlled it in this prototype:
+
+- used `SafeAreaView` on every main screen
+- manually smoke-tested a narrow `320px` viewport during development
+- added compact responsive adjustments under `360px`
+- kept critical actions in a scrollable column rather than forcing everything above the fold
+- added explicit accessibility roles / labels for plans, mood choices, and primary CTAs
+- guarded premium session routes in code, not just visually
+
+## Screenshots
+
+### Paywall
+
+![ZenPulse Paywall](./assets/demo/paywall.png)
+
+### Meditation library
+
+![ZenPulse Library](./assets/demo/library.png)
+
+### AI mood flow
+
+![ZenPulse AI](./assets/demo/ai.png)
+
+### Ritual session
+
+![ZenPulse Session](./assets/demo/session.png)
+
+## Screencast checklist
+
+For the required 7-12 minute recording, show:
+
+1. The design direction / prompting approach
+2. The paywall on a narrow mobile viewport
+3. The locked-card redirect back to paywall
+4. The simulated premium unlock
+5. The ritual session screen with cue progression
+6. The AI mood generation on a real device
+7. A quick note about Safe Area + compact-screen handling
+
