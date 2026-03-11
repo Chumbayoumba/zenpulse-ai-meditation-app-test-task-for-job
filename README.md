@@ -2,6 +2,49 @@
 
 Luxury wellness prototype built for the mobile test task with `React Native + Expo + TypeScript`.
 
+[Русская версия / Russian version](./README.ru.md)
+
+## Reviewer quick guide
+
+If you only open this repository link, you can review the whole submission from GitHub:
+
+- code and commit history
+- screenshots in `assets/demo/`
+- video materials in `assets/demo/videos/`
+- setup / testing instructions
+- the control-question answer about mobile layout risks and AI supervision
+
+GitHub will preview the uploaded `.mp4` files after you click their links below.
+
+## Assignment coverage
+
+### 1. Paywall screen
+
+- bright premium visual direction with a luxury meditation tone
+- two plans: `Monthly` and `Yearly`
+- the `Yearly` option is highlighted as the better-value choice
+- `Try premium free for 7 days` simulates a successful purchase and unlocks premium content
+
+### 2. Meditations home screen
+
+- list of meditation cards with artwork-like gradients and duration metadata
+- free / premium gating is implemented in UI and route logic
+- when `isSubscribed = false`, locked premium cards stay tappable but redirect back to the paywall
+
+### 3. AI Mood of the day
+
+- three mood choices
+- affirmation generation is driven by an LLM prompt
+- the app supports a configurable endpoint and a local proxy for deterministic demos
+- generated content is persisted locally
+
+### 4. Mobile UX requirements
+
+- `SafeAreaView` on primary screens
+- compact layout handling for narrow widths
+- touch-friendly targets
+- scroll-first layouts instead of brittle fixed-height marketing compositions
+
 ## What is included
 
 - Premium `Paywall` with monthly / yearly plans and a highlighted best-value option
@@ -158,11 +201,48 @@ How I controlled it in this prototype:
 
 ![ZenPulse Session](./assets/demo/session.png)
 
+## Video materials
+
+### 1. AI prompting and redesign iteration (desktop)
+
+[`prompting-and-redesign-desktop.mp4`](./assets/demo/videos/prompting-and-redesign-desktop.mp4)
+
+This video documents the prompt-engineering part of the assignment:
+
+- showing the desktop workflow while prompting GitHub Copilot
+- describing the desired premium meditation style and UI direction
+- asking the AI to fix a real layout/readability issue on the meditation cards
+- demonstrating how AI guidance was corrected instead of accepted blindly
+
+### 2. Functional device walkthrough — initial flow
+
+[`device-demo-initial-flow.mp4`](./assets/demo/videos/device-demo-initial-flow.mp4)
+
+This video focuses on the first complete app pass:
+
+- opening the app and showing the `Paywall`
+- using the limited-access path
+- tapping premium cards to confirm redirect-to-paywall behavior
+- activating the simulated trial and unlocking premium access
+- validating the core subscription logic required by the task
+
+### 3. Functional device walkthrough — post-redesign premium state
+
+[`device-demo-post-redesign-premium.mp4`](./assets/demo/videos/device-demo-post-redesign-premium.mp4)
+
+This video shows the app after the readability redesign:
+
+- revisiting the meditation cards after the visual polish pass
+- checking the upgraded readability and premium styling
+- showing the app in an already-unlocked premium state
+- providing an additional proof pass for the final visual quality
+
 ## Final submission checklist
 
 - Public repository: `https://github.com/Chumbayoumba/zenpulse-ai-meditation-app-test-task-for-job`
 - README includes setup, AI notes, phone-testing steps, Safe Area / responsive notes, and the control-question answer
 - Screenshot assets are included under `assets/demo/`
+- Video assets are included under `assets/demo/videos/`
 - Remaining manual artifacts for delivery: the required `7-12 minute screencast` and, if the reviewer expects it separately, a short real-device demo clip
 - Russian candidate handoff + copy-paste Google Doc / email template: see `SUBMISSION_HANDOFF_RU.txt`
 
