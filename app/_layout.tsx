@@ -30,6 +30,7 @@ function RootNavigator() {
         <Stack.Screen name="index" />
         <Stack.Screen name="paywall" />
         <Stack.Screen name="meditations" />
+        <Stack.Screen name="session/[id]" />
         <Stack.Screen
           name="affirmation"
           options={{

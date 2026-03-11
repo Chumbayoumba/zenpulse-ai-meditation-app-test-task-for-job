@@ -22,7 +22,7 @@ export default function MeditationsScreen() {
       return;
     }
 
-    router.push('/affirmation');
+    router.push({ pathname: '/session/[id]', params: { id: sessionId } });
   };
 
   return (
