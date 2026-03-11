@@ -203,9 +203,12 @@ EXPO_PUBLIC_AI_ENDPOINT=http://<LAN_IP_ТВОЕГО_ПК>:8788/api/affirmation
 
 ## Видеоматериалы
 
+GitHub не поддерживает настоящий inline MP4-player прямо внутри `README.md`.  
+Лучший поддерживаемый вариант — большая preview-обложка в README, по клику на которую откроется MP4 через встроенный GitHub file viewer.
+
 ### 1. Prompting и redesign-итерация (desktop)
 
-[`prompting-and-redesign-desktop.mp4`](./assets/demo/videos/prompting-and-redesign-desktop.mp4)
+[![Preview prompting and redesign desktop video](./assets/demo/video-previews/prompting-and-redesign-desktop.png)](./assets/demo/videos/prompting-and-redesign-desktop.mp4)
 
 Это видео закрывает prompt-engineering часть задания:
 
@@ -216,7 +219,7 @@ EXPO_PUBLIC_AI_ENDPOINT=http://<LAN_IP_ТВОЕГО_ПК>:8788/api/affirmation
 
 ### 2. Device walkthrough — первый полный проход
 
-[`device-demo-initial-flow.mp4`](./assets/demo/videos/device-demo-initial-flow.mp4)
+[![Preview initial device flow video](./assets/demo/video-previews/device-demo-initial-flow.png)](./assets/demo/videos/device-demo-initial-flow.mp4)
 
 Это видео показывает первый полный продуктовый сценарий:
 
@@ -228,7 +231,7 @@ EXPO_PUBLIC_AI_ENDPOINT=http://<LAN_IP_ТВОЕГО_ПК>:8788/api/affirmation
 
 ### 3. Device walkthrough — состояние после redesign
 
-[`device-demo-post-redesign-premium.mp4`](./assets/demo/videos/device-demo-post-redesign-premium.mp4)
+[![Preview post redesign premium video](./assets/demo/video-previews/device-demo-post-redesign-premium.png)](./assets/demo/videos/device-demo-post-redesign-premium.mp4)
 
 Это видео показывает приложение после visual polish pass:
 

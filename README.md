@@ -203,9 +203,12 @@ How I controlled it in this prototype:
 
 ## Video materials
 
+GitHub does not support a true inline MP4 player inside `README.md`.  
+The best supported experience is a large preview card in the README that opens the hosted MP4 in GitHub's built-in file viewer when clicked.
+
 ### 1. AI prompting and redesign iteration (desktop)
 
-[`prompting-and-redesign-desktop.mp4`](./assets/demo/videos/prompting-and-redesign-desktop.mp4)
+[![Prompting and redesign desktop video preview](./assets/demo/video-previews/prompting-and-redesign-desktop.png)](./assets/demo/videos/prompting-and-redesign-desktop.mp4)
 
 This video documents the prompt-engineering part of the assignment:
 
@@ -216,7 +219,7 @@ This video documents the prompt-engineering part of the assignment:
 
 ### 2. Functional device walkthrough — initial flow
 
-[`device-demo-initial-flow.mp4`](./assets/demo/videos/device-demo-initial-flow.mp4)
+[![Initial device flow video preview](./assets/demo/video-previews/device-demo-initial-flow.png)](./assets/demo/videos/device-demo-initial-flow.mp4)
 
 This video focuses on the first complete app pass:
 
@@ -228,7 +231,7 @@ This video focuses on the first complete app pass:
 
 ### 3. Functional device walkthrough — post-redesign premium state
 
-[`device-demo-post-redesign-premium.mp4`](./assets/demo/videos/device-demo-post-redesign-premium.mp4)
+[![Post redesign premium video preview](./assets/demo/video-previews/device-demo-post-redesign-premium.png)](./assets/demo/videos/device-demo-post-redesign-premium.mp4)
 
 This video shows the app after the readability redesign:
 
