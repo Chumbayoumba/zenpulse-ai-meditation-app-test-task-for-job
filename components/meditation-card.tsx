@@ -14,23 +14,32 @@ interface MeditationCardProps {
 export function MeditationCard({ session, locked, onPress }: MeditationCardProps) {
   return (
     <Pressable
-      accessibilityHint={locked ? 'Opens the paywall to unlock this premium session.' : 'Opens the AI mood ritual screen.'}
+      accessibilityHint={locked ? 'Opens the paywall to unlock this premium session.' : 'Opens the guided session screen.'}
       accessibilityLabel={`${session.title}, ${session.minutes} minute ${session.category} session. ${locked ? 'Premium locked.' : 'Available now.'}`}
       accessibilityRole="button"
       onPress={onPress}
       style={({ pressed }) => [styles.card, pressed ? styles.pressed : null]}
     >
       <LinearGradient colors={session.palette} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.cover}>
-        <View style={styles.coverTopRow}>
-          <View style={styles.categoryTag}>
-            <Text style={styles.categoryText}>{session.category}</Text>
+        <LinearGradient
+          colors={[colors.mediaScrimTop, 'rgba(53, 32, 58, 0.05)', colors.mediaScrimBottom]}
+          end={{ x: 1, y: 1 }}
+          pointerEvents="none"
+          start={{ x: 0, y: 0 }}
+          style={styles.coverScrim}
+        />
+        <View style={styles.coverContent}>
+          <View style={styles.coverTopRow}>
+            <View style={styles.categoryTag}>
+              <Text style={styles.categoryText}>{session.category}</Text>
+            </View>
+            <View style={styles.minutesTag}>
+              <MaterialCommunityIcons color={colors.textOnTint} name="timer-sand" size={14} />
+              <Text style={styles.minutesText}>{session.minutes} min</Text>
+            </View>
           </View>
-          <View style={styles.minutesTag}>
-            <MaterialCommunityIcons color={colors.white} name="timer-sand" size={14} />
-            <Text style={styles.minutesText}>{session.minutes} min</Text>
-          </View>
+          <MaterialCommunityIcons color={colors.textOnTintMuted} name="waves" size={46} />
         </View>
-        <MaterialCommunityIcons color="rgba(255,255,255,0.75)" name="waves" size={46} />
       </LinearGradient>
       <View style={styles.copyArea}>
         <Text numberOfLines={2} style={styles.title}>
@@ -68,21 +77,33 @@ const styles = StyleSheet.create({
   cover: {
     padding: spacing.lg,
     minHeight: 168,
+    position: 'relative',
+    justifyContent: 'space-between',
+    overflow: 'hidden',
+  },
+  coverScrim: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  coverContent: {
+    flex: 1,
     justifyContent: 'space-between',
   },
   coverTopRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
     gap: spacing.md,
   },
   categoryTag: {
-    backgroundColor: 'rgba(255,255,255,0.24)',
+    backgroundColor: colors.mediaChip,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: colors.mediaStroke,
   },
   categoryText: {
-    color: colors.white,
+    color: colors.textOnTint,
     fontSize: 12,
     fontWeight: '800',
     letterSpacing: 0.3,
@@ -91,15 +112,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: 'rgba(23, 10, 29, 0.18)',
+    backgroundColor: colors.mediaChipStrong,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: colors.mediaStroke,
   },
   minutesText: {
-    color: colors.white,
+    color: colors.textOnTint,
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '800',
   },
   copyArea: {
     paddingHorizontal: spacing.lg,
@@ -128,7 +151,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     borderRadius: radii.pill,
-    backgroundColor: 'rgba(255,255,255,0.16)',
+    backgroundColor: colors.mediaChipStrong,
+    borderWidth: 1,
+    borderColor: colors.mediaStroke,
     paddingHorizontal: 12,
     paddingVertical: 8,
   },

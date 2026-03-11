@@ -24,14 +24,23 @@ const ZenPulseContext = createContext<ZenPulseContextValue | null>(null);
 
 function parseStoredAffirmation(rawValue: string | null) {
   if (!rawValue) {
-    return null;
+    return {
+      affirmation: null,
+      corrupted: false,
+    } as const;
   }
 
   try {
-    return JSON.parse(rawValue) as AffirmationResult;
+    return {
+      affirmation: JSON.parse(rawValue) as AffirmationResult,
+      corrupted: false,
+    } as const;
   } catch (error) {
     if (error instanceof SyntaxError) {
-      throw new Error('Stored affirmation data is corrupted on this device.');
+      return {
+        affirmation: null,
+        corrupted: true,
+      } as const;
     }
 
     throw error;
@@ -55,6 +64,11 @@ export function ZenPulseProvider({ children }: { children: ReactNode }) {
           AsyncStorage.getItem(STORAGE_KEYS.plan),
           AsyncStorage.getItem(STORAGE_KEYS.affirmation),
         ]);
+        const parsedAffirmation = parseStoredAffirmation(storedAffirmation);
+
+        if (parsedAffirmation.corrupted) {
+          await AsyncStorage.removeItem(STORAGE_KEYS.affirmation);
+        }
 
         if (!active) {
           return;
@@ -62,7 +76,10 @@ export function ZenPulseProvider({ children }: { children: ReactNode }) {
 
         setIsSubscribed(storedSubscribed === 'true');
         setSelectedPlanState(storedPlan === 'monthly' ? 'monthly' : 'yearly');
-        setLastAffirmation(parseStoredAffirmation(storedAffirmation));
+        setLastAffirmation(parsedAffirmation.affirmation);
+        setStorageError(
+          parsedAffirmation.corrupted ? 'Stored affirmation data was corrupted and has been reset on this device.' : null,
+        );
       } catch (error) {
         if (!active) {
           return;
@@ -86,6 +103,7 @@ export function ZenPulseProvider({ children }: { children: ReactNode }) {
   const setSelectedPlan = async (plan: SubscriptionPlan) => {
     await AsyncStorage.setItem(STORAGE_KEYS.plan, plan);
     setSelectedPlanState(plan);
+    setStorageError(null);
   };
 
   const activatePremium = async (plan: SubscriptionPlan) => {
@@ -96,11 +114,21 @@ export function ZenPulseProvider({ children }: { children: ReactNode }) {
 
     setIsSubscribed(true);
     setSelectedPlanState(plan);
+    setStorageError(null);
   };
 
   const storeAffirmation = async (affirmation: AffirmationResult) => {
-    await AsyncStorage.setItem(STORAGE_KEYS.affirmation, JSON.stringify(affirmation));
     setLastAffirmation(affirmation);
+
+    try {
+      await AsyncStorage.setItem(STORAGE_KEYS.affirmation, JSON.stringify(affirmation));
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error('The affirmation was generated, but local saving failed. It will stay visible until the app reloads.');
+      }
+
+      throw new Error('The affirmation was generated, but local saving failed. It will stay visible until the app reloads.');
+    }
   };
 
   const value = useMemo(

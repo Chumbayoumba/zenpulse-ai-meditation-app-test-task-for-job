@@ -6,6 +6,7 @@ const DEFAULT_PROVIDER = 'Pollinations AI';
 const DEFAULT_ENDPOINT = 'https://text.pollinations.ai/';
 const LOCAL_PROXY_PROVIDER = 'Local AI proxy';
 const LOCAL_PROXY_PORT = 8788;
+const AI_REQUEST_TIMEOUT_MS = 12000;
 
 const moodPrompts: Record<MoodOption, string> = {
   calm: 'Write one calm affirmation under 18 words for someone who feels overstimulated.',
@@ -131,6 +132,82 @@ function extractText(payload: unknown): string | null {
   return null;
 }
 
+function extractStructuredError(payload: unknown): string | null {
+  if (!payload || typeof payload !== 'object') {
+    return null;
+  }
+
+  const maybePayload = payload as {
+    error?: unknown;
+    detail?: unknown;
+    errors?: unknown;
+    message?: unknown;
+    ok?: unknown;
+    success?: unknown;
+  };
+
+  if (typeof maybePayload.error === 'string') {
+    return normalizeText(maybePayload.error);
+  }
+
+  if (typeof maybePayload.detail === 'string') {
+    return normalizeText(maybePayload.detail);
+  }
+
+  if ((maybePayload.ok === false || maybePayload.success === false) && typeof maybePayload.message === 'string') {
+    return normalizeText(maybePayload.message);
+  }
+
+  const firstError = Array.isArray(maybePayload.errors) ? maybePayload.errors[0] : null;
+  if (typeof firstError === 'string') {
+    return normalizeText(firstError);
+  }
+
+  return null;
+}
+
+async function fetchWithTimeout(input: string, init: RequestInit = {}, externalSignal?: AbortSignal) {
+  const controller = new AbortController();
+  let timedOut = false;
+
+  const handleExternalAbort = () => {
+    controller.abort();
+  };
+
+  if (externalSignal) {
+    if (externalSignal.aborted) {
+      controller.abort();
+    } else {
+      externalSignal.addEventListener('abort', handleExternalAbort, { once: true });
+    }
+  }
+
+  const timeoutId = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, AI_REQUEST_TIMEOUT_MS);
+
+  try {
+    return await fetch(input, {
+      ...init,
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      if (timedOut) {
+        throw new Error('The AI request timed out. Try again on a stronger connection.');
+      }
+
+      throw new Error('The AI request was cancelled before completion.');
+    }
+
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+    externalSignal?.removeEventListener('abort', handleExternalAbort);
+  }
+}
+
 async function parseResponse(response: Response, provider: string) {
   const rawBody = await response.text();
 
@@ -139,7 +216,30 @@ async function parseResponse(response: Response, provider: string) {
   }
 
   const parsed = tryParseJson(rawBody);
-  const text = extractText(parsed) ?? extractText(rawBody);
+
+  if (parsed !== null) {
+    const structuredError = extractStructuredError(parsed);
+
+    if (structuredError) {
+      throw new Error(`The ${provider} response returned an error payload: ${structuredError}`);
+    }
+
+    const text = extractText(parsed);
+
+    if (!text) {
+      throw new Error(`The ${provider} response was empty or malformed.`);
+    }
+
+    if (/important notice|legacy text api|deprecat/i.test(text)) {
+      throw new Error(
+        'The live provider returned a migration notice instead of meditation copy. Use Expo Go on device or set EXPO_PUBLIC_AI_ENDPOINT to a local proxy.',
+      );
+    }
+
+    return text;
+  }
+
+  const text = extractText(rawBody);
 
   if (!text) {
     throw new Error(`The ${provider} response was empty or malformed.`);
@@ -154,19 +254,28 @@ async function parseResponse(response: Response, provider: string) {
   return text;
 }
 
-async function fetchFromCustomEndpoint(endpoint: string, mood: MoodOption, provider = 'configured AI endpoint') {
+async function fetchFromCustomEndpoint(
+  endpoint: string,
+  mood: MoodOption,
+  provider = 'configured AI endpoint',
+  signal?: AbortSignal,
+) {
   const prompt = buildPrompt(mood);
-  const response = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+  const response = await fetchWithTimeout(
+    endpoint,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        app: 'ZenPulse',
+        mood,
+        prompt,
+      }),
     },
-    body: JSON.stringify({
-      app: 'ZenPulse',
-      mood,
-      prompt,
-    }),
-  });
+    signal,
+  );
 
   const text = await parseResponse(response, provider);
 
@@ -176,9 +285,9 @@ async function fetchFromCustomEndpoint(endpoint: string, mood: MoodOption, provi
   };
 }
 
-async function fetchFromPollinations(mood: MoodOption) {
+async function fetchFromPollinations(mood: MoodOption, signal?: AbortSignal) {
   const prompt = encodeURIComponent(buildPrompt(mood));
-  const response = await fetch(`${DEFAULT_ENDPOINT}${prompt}?json=true`);
+  const response = await fetchWithTimeout(`${DEFAULT_ENDPOINT}${prompt}?json=true`, {}, signal);
   const text = await parseResponse(response, DEFAULT_PROVIDER);
 
   return {
@@ -187,24 +296,33 @@ async function fetchFromPollinations(mood: MoodOption) {
   };
 }
 
-export async function generateAffirmation(mood: MoodOption) {
+export async function generateAffirmation(mood: MoodOption, options?: { signal?: AbortSignal }) {
   const customEndpoint = process.env.EXPO_PUBLIC_AI_ENDPOINT?.trim();
   const autoProxyEndpoint = resolveAutoProxyEndpoint();
+  const signal = options?.signal;
 
   try {
     if (customEndpoint) {
-      return await fetchFromCustomEndpoint(customEndpoint, mood, 'Custom endpoint');
+      return await fetchFromCustomEndpoint(customEndpoint, mood, 'Custom endpoint', signal);
+    }
+
+    if (!__DEV__) {
+      throw new Error('Production builds require EXPO_PUBLIC_AI_ENDPOINT to point to your own secured AI service.');
     }
 
     if (autoProxyEndpoint) {
       try {
-        return await fetchFromCustomEndpoint(autoProxyEndpoint, mood, LOCAL_PROXY_PROVIDER);
-      } catch {
+        return await fetchFromCustomEndpoint(autoProxyEndpoint, mood, LOCAL_PROXY_PROVIDER, signal);
+      } catch (error) {
+        if (!(error instanceof TypeError)) {
+          throw error;
+        }
+
         // Fall through to the public demo provider when the local proxy is not running.
       }
     }
 
-    return await fetchFromPollinations(mood);
+    return await fetchFromPollinations(mood, signal);
   } catch (error) {
     if (error instanceof TypeError) {
       throw new Error(
@@ -219,6 +337,10 @@ export async function generateAffirmation(mood: MoodOption) {
 export function getAiModeLabel() {
   if (process.env.EXPO_PUBLIC_AI_ENDPOINT?.trim()) {
     return 'Custom endpoint';
+  }
+
+  if (!__DEV__) {
+    return 'Custom endpoint required in production';
   }
 
   return resolveAutoProxyEndpoint() ? 'Auto local proxy / live demo' : 'Live Pollinations demo';

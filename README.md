@@ -80,6 +80,8 @@ EXPO_PUBLIC_AI_ENDPOINT=http://192.168.X.X:8788/api/affirmation
 4. Scan the QR code from the Expo terminal
 5. The app should auto-detect the Expo host and use the local AI proxy
 
+If Expo Go says the project is incompatible with the installed version, install the current Android APK directly from `https://expo.dev/go`. Store builds can lag behind Expo SDK 55 during rollout windows.
+
 ### If Expo discovery is flaky
 
 You can use:
@@ -155,6 +157,14 @@ How I controlled it in this prototype:
 ### Ritual session
 
 ![ZenPulse Session](./assets/demo/session.png)
+
+## Final submission checklist
+
+- Public repository: `https://github.com/Chumbayoumba/zenpulse-ai-meditation-app-test-task-for-job`
+- README includes setup, AI notes, phone-testing steps, Safe Area / responsive notes, and the control-question answer
+- Screenshot assets are included under `assets/demo/`
+- Remaining manual artifacts for delivery: the required `7-12 minute screencast` and, if the reviewer expects it separately, a short real-device demo clip
+- Russian candidate handoff + copy-paste Google Doc / email template: see `SUBMISSION_HANDOFF_RU.txt`
 
 ## Screencast checklist
 

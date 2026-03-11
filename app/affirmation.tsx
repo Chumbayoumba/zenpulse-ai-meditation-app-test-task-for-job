@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -23,27 +23,59 @@ export default function AffirmationScreen() {
   const { width } = useWindowDimensions();
   const isCompact = width < 360;
   const endpointLabel = getAiModeLabel();
+  const requestControllerRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    return () => {
+      requestControllerRef.current?.abort();
+      requestControllerRef.current = null;
+    };
+  }, []);
 
   const handleGenerate = async () => {
+    requestControllerRef.current?.abort();
+    const controller = new AbortController();
+    requestControllerRef.current = controller;
     setLoading(true);
     setError(null);
 
     try {
-      const result = await generateAffirmation(selectedMood);
-      await storeAffirmation({
+      const result = await generateAffirmation(selectedMood, { signal: controller.signal });
+
+      if (controller.signal.aborted) {
+        return;
+      }
+
+      const affirmation = {
         mood: selectedMood,
         provider: result.provider,
         text: result.text,
         generatedAt: new Date().toISOString(),
-      });
+      };
+
+      try {
+        await storeAffirmation(affirmation);
+      } catch (storageError) {
+        setError(storageError instanceof Error ? storageError.message : 'The affirmation was generated, but local saving failed.');
+      }
 
       if (Platform.OS !== 'web') {
         void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
     } catch (generationError) {
+      if (controller.signal.aborted) {
+        return;
+      }
+
       setError(generationError instanceof Error ? generationError.message : 'The AI affirmation could not be generated.');
     } finally {
-      setLoading(false);
+      if (requestControllerRef.current === controller) {
+        requestControllerRef.current = null;
+      }
+
+      if (!controller.signal.aborted) {
+        setLoading(false);
+      }
     }
   };
 

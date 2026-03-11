@@ -1,0 +1,155 @@
+ZenPulse: финальный handoff для сдачи тестового задания
+======================================================
+
+1. Что уже готово
+-----------------
+- Публичный репозиторий:
+  https://github.com/Chumbayoumba/zenpulse-ai-meditation-app-test-task-for-job
+- Реализован полноценный мобильный прототип на React Native + Expo
+- Есть 3 требуемых направления:
+  - Paywall
+  - Meditations / locked content
+  - AI Mood of the day
+- Есть README с:
+  - инструкцией запуска
+  - phone-testing steps
+  - ответом на контрольный вопрос
+  - скриншотами
+  - screencast checklist
+- Есть финальный UI polish: улучшена читаемость текста на gradient-карточках
+- Последняя инженерная валидация пройдена:
+  - npm run typecheck
+  - npm run doctor
+
+2. Что тебе нужно сделать руками (я это за тебя сделать не могу)
+---------------------------------------------------------------
+1) Если на Android Expo Go пишет, что версия не подходит:
+   - скачай актуальный APK отсюда:
+     https://expo.dev/go
+   - Play Store версия иногда отстает от Expo SDK 55
+
+2) Запусти проект:
+   Терминал #1:
+   npm run ai-proxy
+
+   Терминал #2:
+   npx expo start --lan --clear
+
+3) Открой Expo Go на телефоне и отсканируй QR-код
+
+4) Если bundle открывается, но AI-generation не работает по сети:
+   - создай/обнови `.env.local`:
+     EXPO_PUBLIC_AI_ENDPOINT=http://<LAN_IP_ТВОЕГО_ПК>:8788/api/affirmation
+   - потом перезапусти Expo
+
+5) Запиши обязательный screencast на 7-12 минут
+
+6) При необходимости отдельно запиши короткое demo-video с телефона:
+   - Paywall
+   - limited access
+   - locked redirect
+   - premium unlock
+   - session flow
+   - AI affirmation
+
+3. Что обязательно показать в screencast
+----------------------------------------
+1) Репозиторий на GitHub
+2) Историю коммитов
+3) README
+4) Как ты промптишь дизайн экрана подписки
+5) Как ты просишь AI исправить mobile layout / small-screen issues
+6) Работу приложения в эмуляторе или на телефоне
+7) SafeArea / mobile-specific handling
+
+4. Готовый сценарий демонстрации
+--------------------------------
+Шаг 1.
+Покажи репозиторий и README.
+
+Шаг 2.
+Запусти приложение и покажи экран Paywall.
+
+Шаг 3.
+Нажми Continue with limited access.
+
+Шаг 4.
+На экране Meditations нажми на locked premium card и покажи, что происходит возврат на Paywall.
+
+Шаг 5.
+Нажми Try premium free for 7 days и покажи, что premium unlock сработал.
+
+Шаг 6.
+Открой любую premium meditation и покажи cue progression.
+
+Шаг 7.
+Вернись назад и открой AI Mood of the day.
+
+Шаг 8.
+Выбери настроение и сгенерируй affirmation.
+
+Шаг 9.
+Перезапусти приложение и покажи, что состояние сохраняется.
+
+5. Готовые примеры prompt'ов для screencast
+-------------------------------------------
+Prompt 1 — дизайн paywall:
+Create a premium meditation paywall in React Native + Expo.
+The visual style should feel luxury wellness, editorial, soft pink / plum / lavender,
+with expensive-looking spacing, strong hierarchy, Safe Area support, and mobile-first layout.
+Include monthly and yearly plans, highlight the better-value option, and add a strong
+"Try premium free" CTA. Avoid generic AI-slap card layouts and avoid unreadable text on gradients.
+
+Prompt 2 — фикс мобильной верстки:
+The paywall layout must stay readable on iPhone SE and large phones.
+Please fix any overflow, cramped spacing, or CTA collisions.
+Keep all critical actions reachable, respect Safe Area, and preserve tap-target sizes.
+
+Prompt 3 — locked logic:
+If isSubscribed = false, premium meditation cards must look locked and remain tappable,
+but tapping them should route back to the paywall instead of opening premium content.
+
+6. Шаблон текста для Google Doc / письма / сообщения HR
+-------------------------------------------------------
+Тема:
+Тестовое задание — ZenPulse: AI Meditation App
+
+Текст:
+Добрый день!
+
+Отправляю выполненное тестовое задание "ZenPulse: AI Meditation App".
+
+Что сделано:
+- Реализован мобильный прототип на React Native + Expo
+- Собран premium Paywall с двумя тарифами
+- Сделан экран Meditations с логикой locked premium content
+- Добавлена AI Mood of the day feature с генерацией аффирмации
+- Учтены mobile-specific моменты: SafeArea, compact layout, touch targets, gated navigation
+
+Материалы:
+- GitHub репозиторий:
+  https://github.com/Chumbayoumba/zenpulse-ai-meditation-app-test-task-for-job
+- Screencast процесса разработки:
+  <вставить свою ссылку>
+- Демо-видео / запись с телефона:
+  <вставить свою ссылку, если нужно>
+
+README в репозитории содержит:
+- инструкцию по запуску
+- описание AI-flow
+- phone-testing steps
+- ответ на контрольный вопрос по mobile layout / AI
+
+Спасибо!
+
+С уважением,
+<твое имя>
+
+7. Финальный checklist перед отправкой
+--------------------------------------
+[ ] Expo Go открывает приложение на телефоне
+[ ] AI proxy запущен
+[ ] Screencast записан
+[ ] Ссылка на screencast загружена
+[ ] Проверено, что README открывается на GitHub
+[ ] Отправлено письмо / форма / Google Doc со ссылками

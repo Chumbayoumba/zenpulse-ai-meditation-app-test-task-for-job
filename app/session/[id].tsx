@@ -77,17 +77,28 @@ export default function SessionScreen() {
 
         <Entrance delay={110}>
           <LinearGradient colors={session.palette} end={{ x: 1, y: 1 }} start={{ x: 0, y: 0 }} style={styles.heroCard}>
-            <View style={styles.heroTopRow}>
-              <View style={styles.heroTag}>
-                <Text style={styles.heroTagText}>{session.category}</Text>
+            <LinearGradient
+              colors={[colors.mediaScrimTop, 'rgba(53, 32, 58, 0.08)', colors.mediaScrimBottom]}
+              end={{ x: 1, y: 1 }}
+              pointerEvents="none"
+              start={{ x: 0, y: 0 }}
+              style={styles.heroScrim}
+            />
+            <View style={styles.heroContent}>
+              <View style={styles.heroTopRow}>
+                <View style={styles.heroTag}>
+                  <Text style={styles.heroTagText}>{session.category}</Text>
+                </View>
+                <View style={styles.heroMetaChip}>
+                  <MaterialCommunityIcons color={colors.textOnTint} name="timer-sand" size={14} />
+                  <Text style={styles.heroMetaText}>{session.minutes} min</Text>
+                </View>
               </View>
-              <View style={styles.heroMetaChip}>
-                <MaterialCommunityIcons color={colors.white} name="timer-sand" size={14} />
-                <Text style={styles.heroMetaText}>{session.minutes} min</Text>
+              <View style={[styles.heroCopyBlock, isCompact ? styles.heroCopyBlockCompact : null]}>
+                <Text style={[styles.heroLine, isCompact ? styles.heroLineCompact : null]}>{session.themeLine}</Text>
+                <Text style={styles.heroSubtitle}>{session.subtitle}</Text>
               </View>
             </View>
-            <Text style={[styles.heroLine, isCompact ? styles.heroLineCompact : null]}>{session.themeLine}</Text>
-            <Text style={styles.heroSubtitle}>{session.subtitle}</Text>
           </LinearGradient>
         </Entrance>
 
@@ -204,12 +215,36 @@ const styles = StyleSheet.create({
     borderRadius: radii.xl,
     padding: spacing.xl,
     minHeight: 220,
+    position: 'relative',
     justifyContent: 'space-between',
+    overflow: 'hidden',
     ...shadows.glow,
+  },
+  heroScrim: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  heroContent: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  heroCopyBlock: {
+    alignSelf: 'flex-start',
+    maxWidth: '72%',
+    borderRadius: radii.xl,
+    backgroundColor: 'rgba(24, 12, 23, 0.26)',
+    borderWidth: 1,
+    borderColor: colors.mediaStroke,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    gap: spacing.sm,
+  },
+  heroCopyBlockCompact: {
+    maxWidth: '100%',
   },
   heroTopRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
     gap: spacing.md,
   },
   heroTag: {
@@ -217,10 +252,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: radii.pill,
-    backgroundColor: 'rgba(255,255,255,0.22)',
+    backgroundColor: colors.mediaChip,
+    borderWidth: 1,
+    borderColor: colors.mediaStroke,
   },
   heroTagText: {
-    color: colors.white,
+    color: colors.textOnTint,
     fontSize: 12,
     fontWeight: '800',
     letterSpacing: 0.3,
@@ -230,17 +267,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     borderRadius: radii.pill,
-    backgroundColor: 'rgba(36, 18, 50, 0.18)',
+    backgroundColor: colors.mediaChipStrong,
+    borderWidth: 1,
+    borderColor: colors.mediaStroke,
     paddingHorizontal: 12,
     paddingVertical: 8,
   },
   heroMetaText: {
-    color: colors.white,
+    color: colors.textOnTint,
     fontSize: 12,
     fontWeight: '800',
   },
   heroLine: {
-    color: colors.white,
+    color: colors.textOnTint,
     fontFamily: typography.hero.fontFamily,
     fontSize: 30,
     lineHeight: 36,
@@ -251,7 +290,7 @@ const styles = StyleSheet.create({
     lineHeight: 31,
   },
   heroSubtitle: {
-    color: 'rgba(255,255,255,0.88)',
+    color: colors.textOnTintMuted,
     fontSize: 15,
     lineHeight: 22,
     fontWeight: '600',
